@@ -50,23 +50,23 @@
   .file-loaded-icon { font-size: 1.6rem; }
   .file-loaded-name { font-weight: 500; color: var(--accent); font-size: 13px; }
   .file-loaded-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .btn-clear { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 12px; padding: 5px 10px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+  .btn-clear { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 12px; padding: 5px 10px; cursor: pointer; }
   .btn-clear:hover { border-color: var(--danger); color: var(--danger); }
   .mapping-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
   .mapping-title { font-family: var(--display); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
   .mapping-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   .run-row { display: flex; gap: 12px; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .btn-run { background: var(--accent); color: #0a0a0c; border: none; border-radius: 6px; padding: 11px 28px; font-family: var(--display); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.04em; }
+  .btn-run { background: var(--accent); color: #0a0a0c; border: none; border-radius: 6px; padding: 11px 28px; font-family: var(--display); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
   .btn-run:hover { opacity: 0.88; } .btn-run:active { transform: scale(0.98); } .btn-run:disabled { opacity: 0.35; cursor: not-allowed; }
-  .btn-stop { background: none; border: 1px solid var(--danger); color: var(--danger); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; transition: background 0.15s; display: none; }
+  .btn-stop { background: none; border: 1px solid var(--danger); color: var(--danger); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; display: none; }
   .btn-stop:hover { background: rgba(255,107,107,0.08); }
-  .btn-download { background: none; border: 1px solid var(--accent2); color: var(--accent2); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; transition: background 0.15s; display: none; }
+  .btn-download { background: none; border: 1px solid var(--accent2); color: var(--accent2); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; display: none; }
   .btn-download:hover { background: rgba(95,212,255,0.08); }
   .run-stats { font-size: 12px; color: var(--muted); }
   .progress-wrap { margin-bottom: 1.5rem; display: none; }
   .progress-bar-outer { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
   .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.3s; width: 0%; }
-  .progress-label { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+  .progress-label { font-size: 11px; color: var(--muted); }
   .results-wrap { display: none; }
   .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
   .results-title { font-family: var(--display); font-size: 15px; font-weight: 600; }
@@ -78,19 +78,19 @@
   tbody tr:hover { background: var(--surface); }
   tbody td { padding: 10px 12px; color: var(--text); vertical-align: top; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .email-cell { color: var(--accent2); font-size: 12px; }
-  .status-pill { display: inline-block; font-size: 10px; padding: 2px 9px; border-radius: 99px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap; }
+  .status-pill { display: inline-block; font-size: 10px; padding: 2px 9px; border-radius: 99px; font-weight: 500; white-space: nowrap; }
   .s-found    { background: rgba(126,255,160,0.12); color: var(--success); border: 1px solid rgba(126,255,160,0.25); }
   .s-inferred { background: rgba(255,179,71,0.12);  color: var(--accent3); border: 1px solid rgba(255,179,71,0.25); }
   .s-pending  { background: rgba(136,136,160,0.1);  color: var(--muted);   border: 1px solid rgba(136,136,160,0.2); }
   .s-error    { background: rgba(255,107,107,0.1);  color: var(--danger);  border: 1px solid rgba(255,107,107,0.2); }
   .s-running  { background: rgba(95,212,255,0.1);   color: var(--accent2); border: 1px solid rgba(95,212,255,0.2); }
-  .confidence { font-size: 10px; color: var(--muted); }
   .log-cell { font-size: 10px; color: var(--muted); max-width: 180px; }
   .live-log { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-top: 1.5rem; max-height: 180px; overflow-y: auto; display: none; }
   .log-line { font-size: 11px; color: var(--muted); line-height: 1.8; }
   .log-line.ok { color: var(--accent); } .log-line.info { color: var(--accent2); } .log-line.warn { color: var(--accent3); } .log-line.err { color: var(--danger); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 0.75rem; margin-bottom: 1.5rem; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+  .free-badge { display: inline-block; background: rgba(126,255,160,0.12); color: var(--accent); border: 1px solid rgba(126,255,160,0.25); border-radius: 99px; font-size: 10px; padding: 2px 10px; margin-left: 8px; vertical-align: middle; }
   @media (max-width: 600px) { .config-grid, .mapping-grid { grid-template-columns: 1fr; } .container { padding: 0 1rem 3rem; } }
 </style>
 </head>
@@ -98,22 +98,17 @@
 <div class="container">
   <header>
     <div class="header-tag">CRM Enrichment Tool</div>
-    <h1>Email <span>Scraper</span></h1>
-    <p class="header-sub">Upload an Excel sheet of business leads → auto-fills the Email column → download enriched file. Powered by Google Gemini (free).</p>
+    <h1>Email <span>Scraper</span> <span class="free-badge">100% Free</span></h1>
+    <p class="header-sub">Upload an Excel sheet → searches Google for each business → extracts emails → download enriched file. No AI API needed.</p>
   </header>
 
   <details class="config-panel" id="config-details">
     <summary>⚙ API Configuration</summary>
     <div class="config-grid">
       <div>
-        <label>Gemini API Key (free)</label>
-        <input type="password" id="gemini-key" placeholder="AIza..." />
-        <p class="hint">Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> — 1,500 free requests/day.</p>
-      </div>
-      <div>
         <label>Google Custom Search API Key</label>
         <input type="password" id="google-key" placeholder="AIza..." />
-        <p class="hint">Free: 100 queries/day. <a href="https://developers.google.com/custom-search/v1/introduction" target="_blank">Get key →</a></p>
+        <p class="hint">Free: 100 searches/day. <a href="https://developers.google.com/custom-search/v1/introduction" target="_blank">Get key →</a></p>
       </div>
       <div>
         <label>Google Search Engine ID (CX)</label>
@@ -123,7 +118,7 @@
       <div>
         <label>Delay between requests (ms)</label>
         <input type="text" id="req-delay" value="1500" />
-        <p class="hint">Increase if hitting rate limits. 1500ms recommended.</p>
+        <p class="hint">1500ms recommended. Increase if you see errors.</p>
       </div>
     </div>
     <div style="margin-top:1rem;">
@@ -160,7 +155,7 @@
         <select id="col-location"></select>
       </div>
       <div>
-        <label>Postcode column (optional)</label>
+        <label>Second Postcode column (optional)</label>
         <select id="col-postcode"><option value="">— none —</option></select>
       </div>
     </div>
@@ -180,8 +175,8 @@
   </div>
 
   <div class="legend">
-    <div class="legend-item"><span class="status-pill s-found">Found</span> Email confirmed on website</div>
-    <div class="legend-item"><span class="status-pill s-inferred">Inferred</span> Pattern-guessed from domain</div>
+    <div class="legend-item"><span class="status-pill s-found">Found</span> Email in search results</div>
+    <div class="legend-item"><span class="status-pill s-inferred">Inferred</span> Guessed from domain</div>
     <div class="legend-item"><span class="status-pill s-error">Error</span> Could not find</div>
   </div>
 
@@ -193,7 +188,7 @@
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>#</th><th>Business</th><th>Location</th><th>Email Found</th><th>Confidence</th><th>Status</th><th>Note</th></tr>
+          <tr><th>#</th><th>Business</th><th>Postcode</th><th>Email Found</th><th>Status</th><th>Note</th></tr>
         </thead>
         <tbody id="results-body"></tbody>
       </table>
@@ -207,7 +202,6 @@
 let workbook = null, sheetData = [], headers = [], running = false, shouldStop = false, results = [];
 
 function saveConfig() {
-  localStorage.setItem('es_gemini', document.getElementById('gemini-key').value);
   localStorage.setItem('es_google', document.getElementById('google-key').value);
   localStorage.setItem('es_cx', document.getElementById('google-cx').value);
   localStorage.setItem('es_delay', document.getElementById('req-delay').value);
@@ -217,7 +211,6 @@ function saveConfig() {
   document.getElementById('config-details').removeAttribute('open');
 }
 function loadConfig() {
-  document.getElementById('gemini-key').value = localStorage.getItem('es_gemini') || '';
   document.getElementById('google-key').value = localStorage.getItem('es_google') || '';
   document.getElementById('google-cx').value = localStorage.getItem('es_cx') || '';
   document.getElementById('req-delay').value = localStorage.getItem('es_delay') || '1500';
@@ -284,10 +277,9 @@ function clearFile() {
 }
 
 async function startScrape() {
-  const geminiKey = document.getElementById('gemini-key').value.trim();
   const googleKey = document.getElementById('google-key').value.trim();
   const googleCX  = document.getElementById('google-cx').value.trim();
-  if (!geminiKey) { alert('Please enter your Gemini API key in the config panel.'); document.getElementById('config-details').setAttribute('open',''); return; }
+  if (!googleKey || !googleCX) { alert('Please enter your Google API Key and CX in the config panel.'); document.getElementById('config-details').setAttribute('open',''); return; }
   const colName = parseInt(document.getElementById('col-name').value);
   const colLoc  = parseInt(document.getElementById('col-location').value);
   const colPost = document.getElementById('col-postcode').value;
@@ -295,7 +287,7 @@ async function startScrape() {
   results = sheetData.map((row, i) => ({
     rowIndex: i, name: row[colName] || '', location: row[colLoc] || '',
     postcode: colPost !== '' ? (row[parseInt(colPost)] || '') : '',
-    email: '', confidence: '', status: 'pending', note: ''
+    email: '', status: 'pending', note: ''
   }));
   document.getElementById('btn-run').disabled = true;
   document.getElementById('btn-stop').style.display = 'inline-block';
@@ -312,17 +304,17 @@ async function startScrape() {
     r.status = 'running'; updateRow(i);
     updateProgress(i, results.length, r.name);
     try {
-      const res = await findEmail(r, geminiKey, googleKey, googleCX);
-      r.email = res.email || ''; r.confidence = res.confidence || '';
+      const res = await findEmail(r, googleKey, googleCX);
+      r.email  = res.email || '';
       r.status = res.email ? (res.inferred ? 'inferred' : 'found') : 'error';
-      r.note = res.note || '';
+      r.note   = res.note || '';
       if (r.status === 'found') found++;
       else if (r.status === 'inferred') inferred++;
       else errors++;
       log((r.status === 'error' ? '✗' : '✓') + ' [' + (i+1) + '/' + results.length + '] ' + r.name + ' → ' + (r.email || 'not found'), r.status === 'error' ? 'err' : 'ok');
     } catch(e) {
       r.status = 'error'; r.note = e.message; errors++;
-      log('✗ [' + (i+1) + '/' + results.length + '] ' + r.name + ' → ERROR: ' + e.message, 'err');
+      log('✗ ERROR: ' + r.name + ' → ' + e.message, 'err');
     }
     updateRow(i);
     document.getElementById('run-stats').textContent = found + ' found · ' + inferred + ' inferred · ' + errors + ' failed';
@@ -339,39 +331,75 @@ async function startScrape() {
 
 function stopScrape() { shouldStop = true; }
 
-async function findEmail(r, geminiKey, googleKey, googleCX) {
-  const query = (r.name + ' ' + r.location + ' ' + r.postcode + ' email contact').trim();
-  let searchSnippets = '';
+const EMAIL_REGEX = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+const SKIP_DOMAINS = ['sentry.io','wixpress.com','example.com','domain.com','email.com','yoursite.com','yourdomain.com','google.com','facebook.com','twitter.com','instagram.com','linkedin.com','youtube.com','tiktok.com','wp.com','wordpress.com','squarespace.com'];
 
-  if (googleKey && googleCX) {
+function extractEmails(text) {
+  const matches = text.match(EMAIL_REGEX) || [];
+  return matches.filter(e => !SKIP_DOMAINS.some(d => e.endsWith('@' + d) || e.includes('@' + d)));
+}
+
+function extractDomains(items) {
+  const domains = [];
+  for (const item of items) {
     try {
-      const url = 'https://www.googleapis.com/customsearch/v1?key=' + googleKey + '&cx=' + googleCX + '&q=' + encodeURIComponent(query) + '&num=5';
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.items) {
-        searchSnippets = data.items.map(item => '[' + item.title + '] ' + item.snippet + ' — ' + item.link).join('\n');
-        const emailRegex = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
-        const found = searchSnippets.match(emailRegex);
-        if (found && found.length > 0) return { email: found[0], confidence: 'high', inferred: false, note: 'Found in search results' };
-      }
-    } catch(e) { log('Google Search error: ' + e.message, 'warn'); }
+      const url = new URL(item.link);
+      const host = url.hostname.replace(/^www\./, '');
+      if (!SKIP_DOMAINS.includes(host) && !domains.includes(host)) domains.push(host);
+    } catch(e) {}
+  }
+  return domains;
+}
+
+async function findEmail(r, googleKey, googleCX) {
+  // Search 1: business name + postcode + email
+  const q1 = (r.name + ' ' + r.location + ' ' + r.postcode + ' email').trim();
+  const data1 = await googleSearch(q1, googleKey, googleCX);
+
+  if (data1.items) {
+    // Check snippets and titles for emails
+    for (const item of data1.items) {
+      const text = (item.title || '') + ' ' + (item.snippet || '') + ' ' + (item.htmlSnippet || '');
+      const emails = extractEmails(text);
+      if (emails.length > 0) return { email: emails[0], inferred: false, note: 'Found in search snippet' };
+    }
+
+    // Check page URLs themselves for email patterns
+    for (const item of data1.items) {
+      const emails = extractEmails(item.link || '');
+      if (emails.length > 0) return { email: emails[0], inferred: false, note: 'Found in URL' };
+    }
+
+    // Search 2: try searching specifically for contact page
+    const domains = extractDomains(data1.items);
+    if (domains.length > 0) {
+      const q2 = 'site:' + domains[0] + ' email OR contact';
+      try {
+        const data2 = await googleSearch(q2, googleKey, googleCX);
+        if (data2.items) {
+          for (const item of data2.items) {
+            const text = (item.title || '') + ' ' + (item.snippet || '') + ' ' + (item.htmlSnippet || '');
+            const emails = extractEmails(text);
+            if (emails.length > 0) return { email: emails[0], inferred: false, note: 'Found on contact page' };
+          }
+        }
+      } catch(e) {}
+
+      // Infer common email patterns from domain
+      const domain = domains[0];
+      const inferred = 'info@' + domain;
+      return { email: inferred, inferred: true, note: 'Inferred from domain: ' + domain };
+    }
   }
 
-  const prompt = 'You are helping build a CRM database by finding email addresses for businesses.\n\nBusiness: ' + r.name + '\nPostcode: ' + r.location + (r.postcode ? ' / ' + r.postcode : '') + '\n' + (searchSnippets ? '\nSearch snippets:\n' + searchSnippets : '\n(No search results — use your knowledge to infer if possible)') + '\n\nTask:\n1. Extract any email visible in the snippets\n2. If no email but a website domain is visible, infer the most likely contact email (info@, contact@, hello@)\n3. If genuinely unknown return null\n\nRespond ONLY with valid JSON, no other text:\n{"email":"example@domain.com or null","confidence":"high or medium or low","inferred":true or false,"note":"brief explanation"}';
+  return { email: '', inferred: false, note: 'No results found' };
+}
 
-  const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + geminiKey, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.1, maxOutputTokens: 200 } })
-  });
-
-  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error?.message || 'Gemini API error ' + res.status); }
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  const clean = text.replace(/```json|```/g, '').trim();
-  const parsed = JSON.parse(clean);
-  if (parsed.email === 'null' || parsed.email === null) parsed.email = '';
-  return parsed;
+async function googleSearch(query, key, cx) {
+  const url = 'https://www.googleapis.com/customsearch/v1?key=' + key + '&cx=' + cx + '&q=' + encodeURIComponent(query) + '&num=5';
+  const res = await fetch(url);
+  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error?.message || 'Search API error ' + res.status); }
+  return res.json();
 }
 
 function downloadResult() {
@@ -385,10 +413,9 @@ function downloadResult() {
   let confCol = hdrs.findIndex(h => String(h).toLowerCase() === 'email confidence');
   if (confCol === -1) { confCol = emailCol + 1; json[0][confCol] = 'Email Confidence'; }
   results.forEach((r, i) => {
-    const rowIdx = i + 1;
-    if (!json[rowIdx]) json[rowIdx] = [];
-    json[rowIdx][emailCol] = r.email || '';
-    json[rowIdx][confCol]  = r.status === 'found' ? 'Confirmed' : r.status === 'inferred' ? 'Inferred' : '';
+    if (!json[i+1]) json[i+1] = [];
+    json[i+1][emailCol] = r.email || '';
+    json[i+1][confCol]  = r.status === 'found' ? 'Confirmed' : r.status === 'inferred' ? 'Inferred' : '';
   });
   workbook.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(json);
   XLSX.writeFile(workbook, 'enriched_leads.xlsx');
@@ -403,7 +430,7 @@ function updateRow(i) { const tr = document.getElementById('row-' + i); if (tr) 
 function rowHTML(r, i) {
   const sc = { found:'s-found', inferred:'s-inferred', pending:'s-pending', error:'s-error', running:'s-running' }[r.status] || 's-pending';
   const sl = { found:'Found', inferred:'Inferred', pending:'Pending', error:'Error', running:'Searching…' }[r.status] || r.status;
-  return '<td>' + (i+1) + '</td><td title="' + r.name + '">' + r.name + '</td><td>' + r.location + (r.postcode ? ' · ' + r.postcode : '') + '</td><td class="email-cell">' + (r.email || '—') + '</td><td class="confidence">' + (r.confidence || '—') + '</td><td><span class="status-pill ' + sc + '">' + sl + '</span></td><td class="log-cell" title="' + r.note + '">' + (r.note || '—') + '</td>';
+  return '<td>' + (i+1) + '</td><td title="' + r.name + '">' + r.name + '</td><td>' + r.location + (r.postcode ? ' · ' + r.postcode : '') + '</td><td class="email-cell">' + (r.email || '—') + '</td><td><span class="status-pill ' + sc + '">' + sl + '</span></td><td class="log-cell" title="' + r.note + '">' + (r.note || '—') + '</td>';
 }
 function updateProgress(done, total, label) {
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
