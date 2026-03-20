@@ -9,39 +9,17 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #0e0e10;
-    --surface: #18181c;
-    --surface2: #222228;
-    --border: #2e2e38;
-    --border2: #3a3a48;
-    --accent: #7effa0;
-    --accent2: #5fd4ff;
-    --accent3: #ffb347;
-    --text: #f0f0f4;
-    --muted: #8888a0;
-    --danger: #ff6b6b;
-    --success: #7effa0;
-    --mono: 'IBM Plex Mono', monospace;
-    --display: 'Syne', sans-serif;
+    --bg: #0e0e10; --surface: #18181c; --surface2: #222228; --border: #2e2e38;
+    --border2: #3a3a48; --accent: #7effa0; --accent2: #5fd4ff; --accent3: #ffb347;
+    --text: #f0f0f4; --muted: #8888a0; --danger: #ff6b6b; --success: #7effa0;
+    --mono: 'IBM Plex Mono', monospace; --display: 'Syne', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 14px;
-    min-height: 100vh;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14px; min-height: 100vh; }
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(126,255,160,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(126,255,160,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(126,255,160,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(126,255,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
   }
   .container { max-width: 960px; margin: 0 auto; padding: 0 2rem 4rem; position: relative; z-index: 1; }
   header { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
@@ -62,7 +40,7 @@
   .hint { font-size: 11px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
   .hint a { color: var(--accent2); text-decoration: none; }
   .hint a:hover { text-decoration: underline; }
-  .upload-zone { border: 1.5px dashed var(--border2); border-radius: 10px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; margin-bottom: 1.5rem; }
+  .upload-zone { border: 1.5px dashed var(--border2); border-radius: 10px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 1.5rem; }
   .upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: rgba(126,255,160,0.03); }
   .upload-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
   .upload-zone h3 { font-family: var(--display); font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
@@ -79,9 +57,7 @@
   .mapping-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   .run-row { display: flex; gap: 12px; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .btn-run { background: var(--accent); color: #0a0a0c; border: none; border-radius: 6px; padding: 11px 28px; font-family: var(--display); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.04em; }
-  .btn-run:hover { opacity: 0.88; }
-  .btn-run:active { transform: scale(0.98); }
-  .btn-run:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-run:hover { opacity: 0.88; } .btn-run:active { transform: scale(0.98); } .btn-run:disabled { opacity: 0.35; cursor: not-allowed; }
   .btn-stop { background: none; border: 1px solid var(--danger); color: var(--danger); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; transition: background 0.15s; display: none; }
   .btn-stop:hover { background: rgba(255,107,107,0.08); }
   .btn-download { background: none; border: 1px solid var(--accent2); color: var(--accent2); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; transition: background 0.15s; display: none; }
@@ -112,34 +88,27 @@
   .log-cell { font-size: 10px; color: var(--muted); max-width: 180px; }
   .live-log { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-top: 1.5rem; max-height: 180px; overflow-y: auto; display: none; }
   .log-line { font-size: 11px; color: var(--muted); line-height: 1.8; }
-  .log-line.ok   { color: var(--accent); }
-  .log-line.info { color: var(--accent2); }
-  .log-line.warn { color: var(--accent3); }
-  .log-line.err  { color: var(--danger); }
+  .log-line.ok { color: var(--accent); } .log-line.info { color: var(--accent2); } .log-line.warn { color: var(--accent3); } .log-line.err { color: var(--danger); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 0.75rem; margin-bottom: 1.5rem; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
-  @media (max-width: 600px) {
-    .config-grid, .mapping-grid { grid-template-columns: 1fr; }
-    .container { padding: 0 1rem 3rem; }
-  }
+  @media (max-width: 600px) { .config-grid, .mapping-grid { grid-template-columns: 1fr; } .container { padding: 0 1rem 3rem; } }
 </style>
 </head>
 <body>
 <div class="container">
-
   <header>
     <div class="header-tag">CRM Enrichment Tool</div>
     <h1>Email <span>Scraper</span></h1>
-    <p class="header-sub">Upload an Excel sheet of business leads → auto-fills the Email column → download enriched file.</p>
+    <p class="header-sub">Upload an Excel sheet of business leads → auto-fills the Email column → download enriched file. Powered by Google Gemini (free).</p>
   </header>
 
   <details class="config-panel" id="config-details">
     <summary>⚙ API Configuration</summary>
     <div class="config-grid">
       <div>
-        <label>Anthropic API Key</label>
-        <input type="password" id="anthropic-key" placeholder="sk-ant-..." />
-        <p class="hint">Get one at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Stored in your browser only.</p>
+        <label>Gemini API Key (free)</label>
+        <input type="password" id="gemini-key" placeholder="AIza..." />
+        <p class="hint">Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> — 1,500 free requests/day.</p>
       </div>
       <div>
         <label>Google Custom Search API Key</label>
@@ -148,8 +117,8 @@
       </div>
       <div>
         <label>Google Search Engine ID (CX)</label>
-        <input type="text" id="google-cx" placeholder="017576662512468239146:omuauf_lfve" />
-        <p class="hint">Create at <a href="https://programmablesearchengine.google.com" target="_blank">programmablesearchengine.google.com</a> — set to search the whole web.</p>
+        <input type="text" id="google-cx" placeholder="35478a40d2a7e4047" />
+        <p class="hint">From <a href="https://programmablesearchengine.google.com" target="_blank">programmablesearchengine.google.com</a></p>
       </div>
       <div>
         <label>Delay between requests (ms)</label>
@@ -187,7 +156,7 @@
         <select id="col-name"></select>
       </div>
       <div>
-        <label>Location / Address column</label>
+        <label>Location / Postcode column</label>
         <select id="col-location"></select>
       </div>
       <div>
@@ -224,15 +193,7 @@
     <div class="table-scroll">
       <table>
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Business</th>
-            <th>Location</th>
-            <th>Email Found</th>
-            <th>Confidence</th>
-            <th>Status</th>
-            <th>Note</th>
-          </tr>
+          <tr><th>#</th><th>Business</th><th>Location</th><th>Email Found</th><th>Confidence</th><th>Status</th><th>Note</th></tr>
         </thead>
         <tbody id="results-body"></tbody>
       </table>
@@ -240,13 +201,13 @@
   </div>
 
   <div class="live-log" id="live-log"></div>
-
 </div>
+
 <script>
 let workbook = null, sheetData = [], headers = [], running = false, shouldStop = false, results = [];
 
 function saveConfig() {
-  localStorage.setItem('es_anthropic', document.getElementById('anthropic-key').value);
+  localStorage.setItem('es_gemini', document.getElementById('gemini-key').value);
   localStorage.setItem('es_google', document.getElementById('google-key').value);
   localStorage.setItem('es_cx', document.getElementById('google-cx').value);
   localStorage.setItem('es_delay', document.getElementById('req-delay').value);
@@ -256,7 +217,7 @@ function saveConfig() {
   document.getElementById('config-details').removeAttribute('open');
 }
 function loadConfig() {
-  document.getElementById('anthropic-key').value = localStorage.getItem('es_anthropic') || '';
+  document.getElementById('gemini-key').value = localStorage.getItem('es_gemini') || '';
   document.getElementById('google-key').value = localStorage.getItem('es_google') || '';
   document.getElementById('google-cx').value = localStorage.getItem('es_cx') || '';
   document.getElementById('req-delay').value = localStorage.getItem('es_delay') || '1500';
@@ -265,12 +226,7 @@ loadConfig();
 
 function onDragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
 function onDragLeave(e) { document.getElementById('upload-zone').classList.remove('drag-over'); }
-function onDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if (f) processFile(f);
-}
+function onDrop(e) { e.preventDefault(); document.getElementById('upload-zone').classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if (f) processFile(f); }
 function loadFile(e) { processFile(e.target.files[0]); }
 
 function processFile(file) {
@@ -284,8 +240,7 @@ function processFile(file) {
     headers = json[0] || [];
     sheetData = json.slice(1).filter(r => r.some(c => c !== undefined && c !== ''));
     document.getElementById('upload-zone').style.display = 'none';
-    const fl = document.getElementById('file-loaded');
-    fl.style.display = 'flex';
+    document.getElementById('file-loaded').style.display = 'flex';
     document.getElementById('file-name').textContent = file.name;
     document.getElementById('file-meta').textContent = sheetData.length + ' rows · ' + headers.length + ' columns · Sheet: ' + sheetName;
     buildMapping();
@@ -308,7 +263,7 @@ function buildMapping() {
   const lower = headers.map(h => String(h).toLowerCase());
   const pick = (ps) => { for (const p of ps) { const idx = lower.findIndex(h => h.includes(p)); if (idx >= 0) return idx; } return 0; };
   selName.value = pick(['name','business','company','trade']);
-  selLoc.value  = pick(['address','location','city','town','street']);
+  selLoc.value  = pick(['post','zip','address','location','city','town']);
   selPost.value = pick(['post','zip','code']) || '';
 }
 
@@ -329,18 +284,16 @@ function clearFile() {
 }
 
 async function startScrape() {
-  const anthropicKey = document.getElementById('anthropic-key').value.trim();
-  const googleKey    = document.getElementById('google-key').value.trim();
-  const googleCX     = document.getElementById('google-cx').value.trim();
-  if (!anthropicKey) { alert('Please enter your Anthropic API key in the config panel.'); document.getElementById('config-details').setAttribute('open',''); return; }
+  const geminiKey = document.getElementById('gemini-key').value.trim();
+  const googleKey = document.getElementById('google-key').value.trim();
+  const googleCX  = document.getElementById('google-cx').value.trim();
+  if (!geminiKey) { alert('Please enter your Gemini API key in the config panel.'); document.getElementById('config-details').setAttribute('open',''); return; }
   const colName = parseInt(document.getElementById('col-name').value);
   const colLoc  = parseInt(document.getElementById('col-location').value);
   const colPost = document.getElementById('col-postcode').value;
   running = true; shouldStop = false;
   results = sheetData.map((row, i) => ({
-    rowIndex: i,
-    name:     row[colName] || '',
-    location: row[colLoc]  || '',
+    rowIndex: i, name: row[colName] || '', location: row[colLoc] || '',
     postcode: colPost !== '' ? (row[parseInt(colPost)] || '') : '',
     email: '', confidence: '', status: 'pending', note: ''
   }));
@@ -359,7 +312,7 @@ async function startScrape() {
     r.status = 'running'; updateRow(i);
     updateProgress(i, results.length, r.name);
     try {
-      const res = await findEmail(r, anthropicKey, googleKey, googleCX);
+      const res = await findEmail(r, geminiKey, googleKey, googleCX);
       r.email = res.email || ''; r.confidence = res.confidence || '';
       r.status = res.email ? (res.inferred ? 'inferred' : 'found') : 'error';
       r.note = res.note || '';
@@ -386,9 +339,10 @@ async function startScrape() {
 
 function stopScrape() { shouldStop = true; }
 
-async function findEmail(r, anthropicKey, googleKey, googleCX) {
+async function findEmail(r, geminiKey, googleKey, googleCX) {
   const query = (r.name + ' ' + r.location + ' ' + r.postcode + ' email contact').trim();
   let searchSnippets = '';
+
   if (googleKey && googleCX) {
     try {
       const url = 'https://www.googleapis.com/customsearch/v1?key=' + googleKey + '&cx=' + googleCX + '&q=' + encodeURIComponent(query) + '&num=5';
@@ -402,16 +356,20 @@ async function findEmail(r, anthropicKey, googleKey, googleCX) {
       }
     } catch(e) { log('Google Search error: ' + e.message, 'warn'); }
   }
-  const prompt = 'You are helping build a CRM database by finding email addresses for businesses.\n\nBusiness: ' + r.name + '\nLocation: ' + r.location + (r.postcode ? ' (' + r.postcode + ')' : '') + '\n' + (searchSnippets ? '\nSearch snippets:\n' + searchSnippets : '\n(No search results — infer if possible)') + '\n\nTask:\n1. Extract any email visible in snippets\n2. If no email but a domain is visible, infer the most likely email (info@, contact@, hello@)\n3. If genuinely unknown, return null\n\nRespond ONLY with valid JSON, no other text:\n{\n  "email": "example@domain.com or null",\n  "confidence": "high | medium | low",\n  "inferred": true or false,\n  "note": "brief explanation"\n}';
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+
+  const prompt = 'You are helping build a CRM database by finding email addresses for businesses.\n\nBusiness: ' + r.name + '\nPostcode: ' + r.location + (r.postcode ? ' / ' + r.postcode : '') + '\n' + (searchSnippets ? '\nSearch snippets:\n' + searchSnippets : '\n(No search results — use your knowledge to infer if possible)') + '\n\nTask:\n1. Extract any email visible in the snippets\n2. If no email but a website domain is visible, infer the most likely contact email (info@, contact@, hello@)\n3. If genuinely unknown return null\n\nRespond ONLY with valid JSON, no other text:\n{"email":"example@domain.com or null","confidence":"high or medium or low","inferred":true or false,"note":"brief explanation"}';
+
+  const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + geminiKey, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 200, messages: [{ role: 'user', content: prompt }] })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.1, maxOutputTokens: 200 } })
   });
-  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error?.message || 'API error ' + res.status); }
+
+  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error?.message || 'Gemini API error ' + res.status); }
   const data = await res.json();
-  const text = data.content?.[0]?.text || '';
-  const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const clean = text.replace(/```json|```/g, '').trim();
+  const parsed = JSON.parse(clean);
   if (parsed.email === 'null' || parsed.email === null) parsed.email = '';
   return parsed;
 }
@@ -432,8 +390,7 @@ function downloadResult() {
     json[rowIdx][emailCol] = r.email || '';
     json[rowIdx][confCol]  = r.status === 'found' ? 'Confirmed' : r.status === 'inferred' ? 'Inferred' : '';
   });
-  const newWS = XLSX.utils.aoa_to_sheet(json);
-  workbook.Sheets[sheetName] = newWS;
+  workbook.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(json);
   XLSX.writeFile(workbook, 'enriched_leads.xlsx');
 }
 
@@ -446,7 +403,7 @@ function updateRow(i) { const tr = document.getElementById('row-' + i); if (tr) 
 function rowHTML(r, i) {
   const sc = { found:'s-found', inferred:'s-inferred', pending:'s-pending', error:'s-error', running:'s-running' }[r.status] || 's-pending';
   const sl = { found:'Found', inferred:'Inferred', pending:'Pending', error:'Error', running:'Searching…' }[r.status] || r.status;
-  return '<td>' + (i+1) + '</td><td title="' + r.name + '">' + r.name + '</td><td>' + r.location + (r.postcode ? ' · '+r.postcode : '') + '</td><td class="email-cell">' + (r.email || '—') + '</td><td class="confidence">' + (r.confidence || '—') + '</td><td><span class="status-pill ' + sc + '">' + sl + '</span></td><td class="log-cell" title="' + r.note + '">' + (r.note || '—') + '</td>';
+  return '<td>' + (i+1) + '</td><td title="' + r.name + '">' + r.name + '</td><td>' + r.location + (r.postcode ? ' · ' + r.postcode : '') + '</td><td class="email-cell">' + (r.email || '—') + '</td><td class="confidence">' + (r.confidence || '—') + '</td><td><span class="status-pill ' + sc + '">' + sl + '</span></td><td class="log-cell" title="' + r.note + '">' + (r.note || '—') + '</td>';
 }
 function updateProgress(done, total, label) {
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
