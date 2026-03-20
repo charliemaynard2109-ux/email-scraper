@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Email Scraper — CRM Enrichment Tool</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0e0e10;
+    --surface: #18181c;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --border2: #3a3a48;
+    --accent: #7effa0;
+    --accent2: #5fd4ff;
+    --accent3: #ffb347;
+    --text: #f0f0f4;
+    --muted: #8888a0;
+    --danger: #ff6b6b;
+    --success: #7effa0;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(126,255,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(126,255,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 2rem 4rem; position: relative; z-index: 1; }
+  header { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+  .header-tag { font-size: 11px; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+  header h1 { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: var(--text); line-height: 1.1; }
+  header h1 span { color: var(--accent); }
+  .header-sub { margin-top: 0.6rem; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .config-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .config-panel summary { cursor: pointer; font-family: var(--display); font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; }
+  .config-panel summary::before { content: '▸'; color: var(--accent); transition: transform 0.2s; }
+  .config-panel[open] summary::before { transform: rotate(90deg); }
+  .config-panel summary::-webkit-details-marker { display: none; }
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; }
+  label { display: block; font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  input[type="text"], input[type="password"], select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 9px 12px; color: var(--text); font-family: var(--mono); font-size: 13px; outline: none; transition: border-color 0.15s; }
+  input:focus, select:focus { border-color: var(--accent2); }
+  select option { background: var(--surface2); }
+  .hint { font-size: 11px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+  .hint a { color: var(--accent2); text-decoration: none; }
+  .hint a:hover { text-decoration: underline; }
+  .upload-zone { border: 1.5px dashed var(--border2); border-radius: 10px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; margin-bottom: 1.5rem; }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: rgba(126,255,160,0.03); }
+  .upload-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+  .upload-zone h3 { font-family: var(--display); font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .upload-zone p { color: var(--muted); font-size: 12px; }
+  #file-input { display: none; }
+  .file-loaded { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .file-loaded-icon { font-size: 1.6rem; }
+  .file-loaded-name { font-weight: 500; color: var(--accent); font-size: 13px; }
+  .file-loaded-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .btn-clear { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 12px; padding: 5px 10px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+  .btn-clear:hover { border-color: var(--danger); color: var(--danger); }
+  .mapping-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .mapping-title { font-family: var(--display); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+  .mapping-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .run-row { display: flex; gap: 12px; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .btn-run { background: var(--accent); color: #0a0a0c; border: none; border-radius: 6px; padding: 11px 28px; font-family: var(--display); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.04em; }
+  .btn-run:hover { opacity: 0.88; }
+  .btn-run:active { transform: scale(0.98); }
+  .btn-run:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-stop { background: none; border: 1px solid var(--danger); color: var(--danger); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; transition: background 0.15s; display: none; }
+  .btn-stop:hover { background: rgba(255,107,107,0.08); }
+  .btn-download { background: none; border: 1px solid var(--accent2); color: var(--accent2); border-radius: 6px; padding: 11px 20px; font-family: var(--mono); font-size: 13px; cursor: pointer; transition: background 0.15s; display: none; }
+  .btn-download:hover { background: rgba(95,212,255,0.08); }
+  .run-stats { font-size: 12px; color: var(--muted); }
+  .progress-wrap { margin-bottom: 1.5rem; display: none; }
+  .progress-bar-outer { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+  .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.3s; width: 0%; }
+  .progress-label { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+  .results-wrap { display: none; }
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .results-title { font-family: var(--display); font-size: 15px; font-weight: 600; }
+  .results-summary { font-size: 12px; color: var(--muted); }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; padding: 10px 12px; background: var(--surface); color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:hover { background: var(--surface); }
+  tbody td { padding: 10px 12px; color: var(--text); vertical-align: top; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .email-cell { color: var(--accent2); font-size: 12px; }
+  .status-pill { display: inline-block; font-size: 10px; padding: 2px 9px; border-radius: 99px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap; }
+  .s-found    { background: rgba(126,255,160,0.12); color: var(--success); border: 1px solid rgba(126,255,160,0.25); }
+  .s-inferred { background: rgba(255,179,71,0.12);  color: var(--accent3); border: 1px solid rgba(255,179,71,0.25); }
+  .s-pending  { background: rgba(136,136,160,0.1);  color: var(--muted);   border: 1px solid rgba(136,136,160,0.2); }
+  .s-error    { background: rgba(255,107,107,0.1);  color: var(--danger);  border: 1px solid rgba(255,107,107,0.2); }
+  .s-running  { background: rgba(95,212,255,0.1);   color: var(--accent2); border: 1px solid rgba(95,212,255,0.2); }
+  .confidence { font-size: 10px; color: var(--muted); }
+  .log-cell { font-size: 10px; color: var(--muted); max-width: 180px; }
+  .live-log { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-top: 1.5rem; max-height: 180px; overflow-y: auto; display: none; }
+  .log-line { font-size: 11px; color: var(--muted); line-height: 1.8; }
+  .log-line.ok   { color: var(--accent); }
+  .log-line.info { color: var(--accent2); }
+  .log-line.warn { color: var(--accent3); }
+  .log-line.err  { color: var(--danger); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 0.75rem; margin-bottom: 1.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+  @media (max-width: 600px) {
+    .config-grid, .mapping-grid { grid-template-columns: 1fr; }
+    .container { padding: 0 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-tag">CRM Enrichment Tool</div>
+    <h1>Email <span>Scraper</span></h1>
+    <p class="header-sub">Upload an Excel sheet of business leads → auto-fills the Email column → download enriched file.</p>
+  </header>
+
+  <details class="config-panel" id="config-details">
+    <summary>⚙ API Configuration</summary>
+    <div class="config-grid">
+      <div>
+        <label>Anthropic API Key</label>
+        <input type="password" id="anthropic-key" placeholder="sk-ant-..." />
+        <p class="hint">Get one at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Stored in your browser only.</p>
+      </div>
+      <div>
+        <label>Google Custom Search API Key</label>
+        <input type="password" id="google-key" placeholder="AIza..." />
+        <p class="hint">Free: 100 queries/day. <a href="https://developers.google.com/custom-search/v1/introduction" target="_blank">Get key →</a></p>
+      </div>
+      <div>
+        <label>Google Search Engine ID (CX)</label>
+        <input type="text" id="google-cx" placeholder="017576662512468239146:omuauf_lfve" />
+        <p class="hint">Create at <a href="https://programmablesearchengine.google.com" target="_blank">programmablesearchengine.google.com</a> — set to search the whole web.</p>
+      </div>
+      <div>
+        <label>Delay between requests (ms)</label>
+        <input type="text" id="req-delay" value="1500" />
+        <p class="hint">Increase if hitting rate limits. 1500ms recommended.</p>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <button onclick="saveConfig()" class="btn-run" style="font-size:12px;padding:8px 18px;">Save Config</button>
+      <span id="config-saved" style="font-size:12px;color:var(--accent);margin-left:12px;display:none;">✓ Saved</span>
+    </div>
+  </details>
+
+  <div id="upload-zone" class="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+    <span class="upload-icon">📊</span>
+    <h3>Drop your Excel file here</h3>
+    <p>or click to browse — .xlsx or .xls accepted</p>
+  </div>
+  <input type="file" id="file-input" accept=".xlsx,.xls" onchange="loadFile(event)" />
+
+  <div id="file-loaded" class="file-loaded" style="display:none;">
+    <span class="file-loaded-icon">📗</span>
+    <div>
+      <div class="file-loaded-name" id="file-name">—</div>
+      <div class="file-loaded-meta" id="file-meta">—</div>
+    </div>
+    <button class="btn-clear" onclick="clearFile()">✕ Clear</button>
+  </div>
+
+  <div id="mapping-panel" class="mapping-panel" style="display:none;">
+    <div class="mapping-title">Column Mapping</div>
+    <div class="mapping-grid">
+      <div>
+        <label>Business Name column</label>
+        <select id="col-name"></select>
+      </div>
+      <div>
+        <label>Location / Address column</label>
+        <select id="col-location"></select>
+      </div>
+      <div>
+        <label>Postcode column (optional)</label>
+        <select id="col-postcode"><option value="">— none —</option></select>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">Emails will be written into a column called <strong style="color:var(--accent2)">Email</strong>. If it already exists it will be updated; otherwise a new column is appended.</p>
+  </div>
+
+  <div class="run-row">
+    <button class="btn-run" id="btn-run" onclick="startScrape()" disabled>▶ Start Scraping</button>
+    <button class="btn-stop" id="btn-stop" onclick="stopScrape()">■ Stop</button>
+    <button class="btn-download" id="btn-download" onclick="downloadResult()">↓ Download Enriched Excel</button>
+    <span class="run-stats" id="run-stats"></span>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+    <div class="progress-label" id="progress-label">Preparing...</div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="status-pill s-found">Found</span> Email confirmed on website</div>
+    <div class="legend-item"><span class="status-pill s-inferred">Inferred</span> Pattern-guessed from domain</div>
+    <div class="legend-item"><span class="status-pill s-error">Error</span> Could not find</div>
+  </div>
+
+  <div class="results-wrap" id="results-wrap">
+    <div class="results-header">
+      <span class="results-title">Results</span>
+      <span class="results-summary" id="results-summary"></span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Business</th>
+            <th>Location</th>
+            <th>Email Found</th>
+            <th>Confidence</th>
+            <th>Status</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="live-log" id="live-log"></div>
+
+</div>
+<script>
+let workbook = null, sheetData = [], headers = [], running = false, shouldStop = false, results = [];
+
+function saveConfig() {
+  localStorage.setItem('es_anthropic', document.getElementById('anthropic-key').value);
+  localStorage.setItem('es_google', document.getElementById('google-key').value);
+  localStorage.setItem('es_cx', document.getElementById('google-cx').value);
+  localStorage.setItem('es_delay', document.getElementById('req-delay').value);
+  const saved = document.getElementById('config-saved');
+  saved.style.display = 'inline';
+  setTimeout(() => { saved.style.display = 'none'; }, 2000);
+  document.getElementById('config-details').removeAttribute('open');
+}
+function loadConfig() {
+  document.getElementById('anthropic-key').value = localStorage.getItem('es_anthropic') || '';
+  document.getElementById('google-key').value = localStorage.getItem('es_google') || '';
+  document.getElementById('google-cx').value = localStorage.getItem('es_cx') || '';
+  document.getElementById('req-delay').value = localStorage.getItem('es_delay') || '1500';
+}
+loadConfig();
+
+function onDragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
+function onDragLeave(e) { document.getElementById('upload-zone').classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) processFile(f);
+}
+function loadFile(e) { processFile(e.target.files[0]); }
+
+function processFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    workbook = XLSX.read(data, { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    const ws = workbook.Sheets[sheetName];
+    const json = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    headers = json[0] || [];
+    sheetData = json.slice(1).filter(r => r.some(c => c !== undefined && c !== ''));
+    document.getElementById('upload-zone').style.display = 'none';
+    const fl = document.getElementById('file-loaded');
+    fl.style.display = 'flex';
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-meta').textContent = sheetData.length + ' rows · ' + headers.length + ' columns · Sheet: ' + sheetName;
+    buildMapping();
+    document.getElementById('mapping-panel').style.display = 'block';
+    document.getElementById('btn-run').disabled = false;
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function buildMapping() {
+  const selName = document.getElementById('col-name');
+  const selLoc  = document.getElementById('col-location');
+  const selPost = document.getElementById('col-postcode');
+  selName.innerHTML = ''; selLoc.innerHTML = '';
+  selPost.innerHTML = '<option value="">— none —</option>';
+  headers.forEach((h, i) => {
+    const o = () => { const el = document.createElement('option'); el.value = i; el.textContent = h || 'Column ' + (i+1); return el; };
+    selName.appendChild(o()); selLoc.appendChild(o()); selPost.appendChild(o());
+  });
+  const lower = headers.map(h => String(h).toLowerCase());
+  const pick = (ps) => { for (const p of ps) { const idx = lower.findIndex(h => h.includes(p)); if (idx >= 0) return idx; } return 0; };
+  selName.value = pick(['name','business','company','trade']);
+  selLoc.value  = pick(['address','location','city','town','street']);
+  selPost.value = pick(['post','zip','code']) || '';
+}
+
+function clearFile() {
+  workbook = null; sheetData = []; headers = []; results = [];
+  document.getElementById('file-input').value = '';
+  document.getElementById('upload-zone').style.display = 'block';
+  document.getElementById('file-loaded').style.display = 'none';
+  document.getElementById('mapping-panel').style.display = 'none';
+  document.getElementById('results-wrap').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('live-log').style.display = 'none';
+  document.getElementById('btn-run').disabled = true;
+  document.getElementById('btn-download').style.display = 'none';
+  document.getElementById('btn-stop').style.display = 'none';
+  document.getElementById('run-stats').textContent = '';
+  document.getElementById('results-body').innerHTML = '';
+}
+
+async function startScrape() {
+  const anthropicKey = document.getElementById('anthropic-key').value.trim();
+  const googleKey    = document.getElementById('google-key').value.trim();
+  const googleCX     = document.getElementById('google-cx').value.trim();
+  if (!anthropicKey) { alert('Please enter your Anthropic API key in the config panel.'); document.getElementById('config-details').setAttribute('open',''); return; }
+  const colName = parseInt(document.getElementById('col-name').value);
+  const colLoc  = parseInt(document.getElementById('col-location').value);
+  const colPost = document.getElementById('col-postcode').value;
+  running = true; shouldStop = false;
+  results = sheetData.map((row, i) => ({
+    rowIndex: i,
+    name:     row[colName] || '',
+    location: row[colLoc]  || '',
+    postcode: colPost !== '' ? (row[parseInt(colPost)] || '') : '',
+    email: '', confidence: '', status: 'pending', note: ''
+  }));
+  document.getElementById('btn-run').disabled = true;
+  document.getElementById('btn-stop').style.display = 'inline-block';
+  document.getElementById('btn-download').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('results-wrap').style.display = 'block';
+  document.getElementById('live-log').style.display = 'block';
+  renderTable();
+  const delay = parseInt(document.getElementById('req-delay').value) || 1500;
+  let found = 0, inferred = 0, errors = 0;
+  for (let i = 0; i < results.length; i++) {
+    if (shouldStop) { log('Stopped by user.', 'warn'); break; }
+    const r = results[i];
+    r.status = 'running'; updateRow(i);
+    updateProgress(i, results.length, r.name);
+    try {
+      const res = await findEmail(r, anthropicKey, googleKey, googleCX);
+      r.email = res.email || ''; r.confidence = res.confidence || '';
+      r.status = res.email ? (res.inferred ? 'inferred' : 'found') : 'error';
+      r.note = res.note || '';
+      if (r.status === 'found') found++;
+      else if (r.status === 'inferred') inferred++;
+      else errors++;
+      log((r.status === 'error' ? '✗' : '✓') + ' [' + (i+1) + '/' + results.length + '] ' + r.name + ' → ' + (r.email || 'not found'), r.status === 'error' ? 'err' : 'ok');
+    } catch(e) {
+      r.status = 'error'; r.note = e.message; errors++;
+      log('✗ [' + (i+1) + '/' + results.length + '] ' + r.name + ' → ERROR: ' + e.message, 'err');
+    }
+    updateRow(i);
+    document.getElementById('run-stats').textContent = found + ' found · ' + inferred + ' inferred · ' + errors + ' failed';
+    document.getElementById('results-summary').textContent = (found + inferred) + ' emails found out of ' + (i+1) + ' processed';
+    await sleep(delay);
+  }
+  running = false;
+  document.getElementById('btn-run').disabled = false;
+  document.getElementById('btn-stop').style.display = 'none';
+  document.getElementById('btn-download').style.display = 'inline-block';
+  updateProgress(results.length, results.length, 'Complete');
+  log('Done. ' + found + ' confirmed · ' + inferred + ' inferred · ' + errors + ' failed.', 'info');
+}
+
+function stopScrape() { shouldStop = true; }
+
+async function findEmail(r, anthropicKey, googleKey, googleCX) {
+  const query = (r.name + ' ' + r.location + ' ' + r.postcode + ' email contact').trim();
+  let searchSnippets = '';
+  if (googleKey && googleCX) {
+    try {
+      const url = 'https://www.googleapis.com/customsearch/v1?key=' + googleKey + '&cx=' + googleCX + '&q=' + encodeURIComponent(query) + '&num=5';
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.items) {
+        searchSnippets = data.items.map(item => '[' + item.title + '] ' + item.snippet + ' — ' + item.link).join('\n');
+        const emailRegex = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+        const found = searchSnippets.match(emailRegex);
+        if (found && found.length > 0) return { email: found[0], confidence: 'high', inferred: false, note: 'Found in search results' };
+      }
+    } catch(e) { log('Google Search error: ' + e.message, 'warn'); }
+  }
+  const prompt = 'You are helping build a CRM database by finding email addresses for businesses.\n\nBusiness: ' + r.name + '\nLocation: ' + r.location + (r.postcode ? ' (' + r.postcode + ')' : '') + '\n' + (searchSnippets ? '\nSearch snippets:\n' + searchSnippets : '\n(No search results — infer if possible)') + '\n\nTask:\n1. Extract any email visible in snippets\n2. If no email but a domain is visible, infer the most likely email (info@, contact@, hello@)\n3. If genuinely unknown, return null\n\nRespond ONLY with valid JSON, no other text:\n{\n  "email": "example@domain.com or null",\n  "confidence": "high | medium | low",\n  "inferred": true or false,\n  "note": "brief explanation"\n}';
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 200, messages: [{ role: 'user', content: prompt }] })
+  });
+  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error?.message || 'API error ' + res.status); }
+  const data = await res.json();
+  const text = data.content?.[0]?.text || '';
+  const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+  if (parsed.email === 'null' || parsed.email === null) parsed.email = '';
+  return parsed;
+}
+
+function downloadResult() {
+  if (!workbook || !results.length) return;
+  const sheetName = workbook.SheetNames[0];
+  const ws = workbook.Sheets[sheetName];
+  const json = XLSX.utils.sheet_to_json(ws, { header: 1 });
+  const hdrs = json[0] || [];
+  let emailCol = hdrs.findIndex(h => String(h).toLowerCase() === 'email');
+  if (emailCol === -1) { emailCol = hdrs.length; json[0][emailCol] = 'Email'; }
+  let confCol = hdrs.findIndex(h => String(h).toLowerCase() === 'email confidence');
+  if (confCol === -1) { confCol = emailCol + 1; json[0][confCol] = 'Email Confidence'; }
+  results.forEach((r, i) => {
+    const rowIdx = i + 1;
+    if (!json[rowIdx]) json[rowIdx] = [];
+    json[rowIdx][emailCol] = r.email || '';
+    json[rowIdx][confCol]  = r.status === 'found' ? 'Confirmed' : r.status === 'inferred' ? 'Inferred' : '';
+  });
+  const newWS = XLSX.utils.aoa_to_sheet(json);
+  workbook.Sheets[sheetName] = newWS;
+  XLSX.writeFile(workbook, 'enriched_leads.xlsx');
+}
+
+function renderTable() {
+  const body = document.getElementById('results-body');
+  body.innerHTML = '';
+  results.forEach((r, i) => { const tr = document.createElement('tr'); tr.id = 'row-' + i; tr.innerHTML = rowHTML(r, i); body.appendChild(tr); });
+}
+function updateRow(i) { const tr = document.getElementById('row-' + i); if (tr) tr.innerHTML = rowHTML(results[i], i); }
+function rowHTML(r, i) {
+  const sc = { found:'s-found', inferred:'s-inferred', pending:'s-pending', error:'s-error', running:'s-running' }[r.status] || 's-pending';
+  const sl = { found:'Found', inferred:'Inferred', pending:'Pending', error:'Error', running:'Searching…' }[r.status] || r.status;
+  return '<td>' + (i+1) + '</td><td title="' + r.name + '">' + r.name + '</td><td>' + r.location + (r.postcode ? ' · '+r.postcode : '') + '</td><td class="email-cell">' + (r.email || '—') + '</td><td class="confidence">' + (r.confidence || '—') + '</td><td><span class="status-pill ' + sc + '">' + sl + '</span></td><td class="log-cell" title="' + r.note + '">' + (r.note || '—') + '</td>';
+}
+function updateProgress(done, total, label) {
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' / ' + total + ' — ' + label;
+}
+function log(msg, type) {
+  const el = document.getElementById('live-log');
+  const line = document.createElement('div');
+  line.className = 'log-line ' + (type || '');
+  line.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
